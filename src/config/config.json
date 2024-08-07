@@ -1,10 +1,10 @@
 {
-    "platform": "Telegram",
-    "name": "SET HERE THE NAME BOT",
-    "mention": "@bot",
-    "url": "https://t.me/bot",
-    "api_id": 0,
-    "api_hash": "SET HERE THE API HASH",
-    "bot_token": "SET HERE THE BOT TOKEN",
-    "dir_plugins": "apps"
+  "platform": "Telegram",
+  "name": "methodbot",
+  "mention": "@methodTechbot",
+  "url": "https://t.me/methodTechbot",
+  "api_id": 26981189,
+  "api_hash": "0793407482789e11f5591b751498051c",
+  "bot_token": "7474359231:AAG1UptdFd1K3cC_oP5S5jJ9tznxWyIk4AM",
+  "dir_plugins": "apps"
 }

@@ -9,13 +9,7 @@ def git_pull(repo_path=".."):
     origin.pull()
 
 def forUpdate(owner, project, local_path=".."):
-    repo = git.Repo(local_path)
-    local_hash = repo.head.commit.hexsha
-
-    response = requests.get(f"https://api.github.com/repos/{owner}/{project}/commits")
-    remote_hash = response.json()[0]["sha"]
-
-    return str(local_hash) == str(remote_hash)
+    return True
 
 if __name__ == "__main__":
     # Controlador de parámetros

@@ -1,29 +1,36 @@
 # Importando los modulos
 from pyrogram import Client, filters
-from moduls.utils.buttons import keymakers
+from moduls.utils.utils import loading_message
 from moduls.utils import utils
+import pyrogram
+from moduls.utils.buttons import keymakers
+
+# Operaciones de bases de datos
+from moduls.utils.database import UserOperations
 
 # Controlando el mensaje con las siguientes características
 @Client.on_message(filters.command(["start", "iniciar", "inicio"], prefixes=["!", "/", "."]) & filters.text)
-async def start(client, response, postdata=0):
-    # Page initial
-    if not postdata:
-        var = "This is a large text"
-        continuevar = 1
-        codeVARstr = utils.saveVAR(var) # Save the key
-        codeVARint = utils.saveVAR(continuevar) # Save the key
-        buttons = keymakers(["✅ Continue", "IP API DEMO", "Testing"], [f"start-{codeVARint}", "ipQ-0", f"start-{codeVARstr}"])
-        await response.reply("""✅ The bot is on now!.
+async def start(clientC:pyrogram.client.Client, responseR:pyrogram.types.messages_and_media.message.Message, postdata=0):
 
-You can use other functions for the control commands.""", reply_markup=buttons)
+    sticker = await loading_message(responseR, 1)
 
-    elif type(postdata) is str:
-        await response.reply(f"Postdata VAR received: {postdata}")
+    ID_USER = responseR.from_user.id
+    USERNAME = responseR.from_user.username
 
-    # Process other pages
+    User = UserOperations()
+
+    # Verificando si está registrado en la base de datos
+    if User.is_registered(ID_USER):
+        await sticker.delete()
+
+        botones = keymakers(["❌ Cerrar", "📘 Mis datos", "[👀] Ver métodos disponibles", "[🏁] Ver ofertas disponibles"],
+                            ["rm-0", f"info-{ID_USER}", "get_metodo_info-0", "verOfertas-0"], lote=2)
+        await responseR.reply_text(f"[👋] Hola de nuevo!.", reply_markup=botones)
+    
+    # Si no está registrado en la base de datos
     else:
-        botones = keymakers(
-            [f"{number}" for number in range(postdata-1, postdata+3)],
-            [f"start-{number}" for number in range(postdata-1, postdata+3)],
-        )
-        await response.reply(f"Postdata INT received: {postdata}", reply_markup=botones)
+        await sticker.delete()
+        User.create_user(ID_USER, USERNAME, 0)
+        botones = keymakers(["❌ Cerrar", "📘 Mis datos", "[👀] Ver métodos disponibles", "[🏁] Ver ofertas disponibles"],
+                            ["rm-0", f"info-{ID_USER}", "get_metodo_info-0", "verOfertas-0"], lote=2)
+        await responseR.reply_text(f"[👋] Bienvenido al bot donde encontrarás los mejores métodos.", reply_markup=botones)
